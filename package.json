@@ -1,0 +1,14 @@
+{
+  "name": "dailymoodtracker",
+  "version": "1.0.0",
+  "description": "app for tracking your daily mood",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anh vu nguyen",
+  "license": "ISC",
+  "dependencies": {
+    "http-status-codes": "^1.4.0"
+  }
+}
