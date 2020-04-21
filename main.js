@@ -1,59 +1,65 @@
 const port = 3000,
-    http = require("http"),
-    httpStatus = require("http-status-codes"),
-    router = require("./router"),
-    contentTypes = require("./contentTypes"),
-    utils = require("./utils");
+  http = require("http"),
+  httpStatus = require("http-status-codes"),
+  router = require("./router"),
+  contentTypes = require("./contentTypes"),
+  utils = require("./utils");
 
-    router.get("/", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.html);
-        utils.getFile("views/index.html", res);
-    });
+process.on("uncaughtException", function(exception) {
+  console.log(exception); // to see your exception details in the console
+  // if you are on production, maybe you can send the exception details to your
+  // email as well ?
+});
 
-    router.get("/courses.html", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.html);
-        utils.getFile("views/courses.html", res);
-    });
+router.get("/", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.html);
+  return utils.getFile("./views/index.html", res);
+});
 
-    router.get("/contact.html", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.html);
-        utils.getFile("views/contact.html", res);
-    });
+router.get("/courses.html", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.html);
+  utils.getFile("views/courses.html", res);
+});
 
-    router.post("/", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.html);
-        utils.getFile("views/thanks.html", res);
-    });
+router.get("/contact.html", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.html);
+  utils.getFile("views/contact.html", res);
+});
 
-    // router.get("/graph.png", (req, res) => {
-    //     res.writeHead(httpStatus.OK, contentTypes.png);
-    //     utils.getFile("public/images/graph.png", res);
-    // });
+router.post("/", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.html);
+  utils.getFile("views/thanks.html", res);
+});
 
-    // router.get("/people.jpg", (req, res) => {
-    //     res.writeHead(httpStatus.OK, contentTypes.jpg);
-    //     utils.getFile("public/images/product.jpg", res);
-    // });
+// router.get("/graph.png", (req, res) => {
+//     res.writeHead(httpStatus.OK, contentTypes.png);
+//     utils.getFile("public/images/graph.png", res);
+// });
 
-    // router.get("/product.jpg", (req, res) => {
-    //     res.writeHead(httpStatus.OK, contentTypes.jpg);
-    //     utils.getFile("public/images/product.jpg", res);
-    // });
-    
-    router.get("/dailymoodtracker.css", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.css);
-        utils.getFile("public/css/dailymoodtracker.css", res);
-    });
+// router.get("/people.jpg", (req, res) => {
+//     res.writeHead(httpStatus.OK, contentTypes.jpg);
+//     utils.getFile("public/images/product.jpg", res);
+// });
 
-    router.get("/bootstrap.css", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.css);
-        utils.getFile("public/css/bootstrap.css", res);
-    });
+// router.get("/product.jpg", (req, res) => {
+//     res.writeHead(httpStatus.OK, contentTypes.jpg);
+//     utils.getFile("public/images/product.jpg", res);
+// });
 
-    router.get("/dailymoodtracker.js", (req, res) => {
-        res.writeHead(httpStatus.OK, contentTypes.js);
-        utils.getFile("public/js/dailymoodtracker.js", res);
-    });
+router.get("/dailymoodtracker.css", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.css);
+  utils.getFile("public/css/dailymoodtracker.css", res);
+});
 
-    http.createServer(router.handle).listen(port);
-    console.log('The server is listening on port number: ${port}');
+router.get("/bootstrap.css", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.css);
+  utils.getFile("public/css/bootstrap.css", res);
+});
+
+router.get("/dailymoodtracker.js", (req, res) => {
+  res.writeHead(httpStatus.OK, contentTypes.js);
+  utils.getFile("public/js/dailymoodtracker.js", res);
+});
+
+http.createServer(router.handle).listen(port);
+console.log(`The server is listening on port number: ${port}`);
