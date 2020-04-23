@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Fragebogen</title>
+    <link rel="stylesheet" href="./bootstrap.css">
+    <link rel="stylesheet" href="./dailymoodtracker.css">
+    <script src="./dailymoodtracker.js"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1 class="logo">Daily Mood Tracker</h1>
+      
+      <nav> 
+          <div class="nav-elements">
+            <a class="nav-element">Neuer Eintrag</a>
+            <a class="nav-element">Mein Stimmungsverlauf</a>
+            <a class="nav-element">Einstellungen</a>
+            <a class="nav-element">Abmelden</a>
+          </div>
+      </nav>
+    </header>
+    
+    <main class="container">
+
+      <h2 class="title">Dein täglicher Fragebogen</h2>
+
+      <form class="contact-form container-questionnaire" action="/" method="post">
+
+        <h3 class="question">Wie fühlst du dich heute?</h3>
+
+        <fieldset class="q1">
+          <div>
+            <input class="radio-input" type="radio" id="verypositive" name="mood-q1" value="verypositive">
+            <label for="verypositive"> Sehr gut</label>  
+          </div>
+          <div>
+            <input class="radio-input" type="radio" id="positive" name="mood-q1" value="positive">
+            <label for="positive"> Gut</label> 
+          </div> 
+          <div>
+            <input class="radio-input" type="radio" id="normal" name="mood-q1" value="normal">
+            <label for="normal"> Normal</label>   
+          </div>
+          <div>
+            <input class="radio-input" type="radio" id="negative" name="mood-q1" value="negative">
+            <label for="negative"> Schlecht</label>   
+          </div>
+          <div>
+            <input class="radio-input" type="radio" id="verynegative" name="mood-q1" value="verynegative">
+            <label for="verynegative"> Sehr schlecht</label> 
+          </div>
+          </fieldset>
+  
+        <h3 class="question">Hier ist Platz für deine persönlichen Notizen:</h3>
+      
+        <input class="q2" type="text" name="text">
+
+        <input class="button" type="submit" value="Absenden">
+
+      </form>
+    </main>  
+  </body>
+</html>
