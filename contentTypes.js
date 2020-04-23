@@ -14,6 +14,9 @@ module.exports = {
     png: {
         "Content-Type": "text/png"
     },
+    ttf: {
+        "Content-Type": "text/ttf"
+    },
     css:{
         "Content-Type": "text/css"
     }
