@@ -11,13 +11,14 @@ app.use(layouts);
 app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 3000);
 
-app.get("/:myName", homeController.respondWithName);
+
 // Home Page
 app.get("/", homeController.respondWithIndex);
 
 // Routing
 app.get("/statistics", homeController.showStatistics);
 app.get("/questionnaire", homeController.showQuestionnaire);
+app.get("/:myName", homeController.respondWithName);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
