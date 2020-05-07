@@ -1,8 +1,8 @@
 const mongoose = require("mongoose"),
-    Subscriber = require("./models/subscriber");
+    Subscriber = require("./models/registration");
 
 mongoose.connect(
-    "mongodb:://localhost:27017/dmt_db",
+    "mongodb:://localhost:27017/dmt_user_registration",
     { useNewUrlParser: true }
 );
 
@@ -12,34 +12,34 @@ var contacts = [
     {
         name: "Lioba Waldburg",
         email: "lioba@waldburg.de",
-        zipCode: 12345
+        password: 12345
     },
     {
         name: "Jakob Erek Sen",
         email: "jakoberek@sen.de",
-        zipCode: 12345
+        password: 12345
     },
     {
         name: "Leander Gebhardt",
         email: "leander@gebhardt.de",
-        zipCode: 12345
+        password: 12345
     },
     {
         name: "Anh Vu Nguyen",
         email: "anhvu@nguyen.de",
-        zipCode: 12345
+        password: 12345
     },
 ];
 
-Subscriber.Subscriber.deleteMany()
+Registrant.Registrant.deleteMany()
     .exec()
     .then(() => {
-        console.log("Subscriber data is empty");
+        console.log("Registrant data is empty");
     });
     var commands = [];
 
     contacts.forEach((c) => {
-        commands.push(Subscriber.Subscriber.create({
+        commands.push(Registrant.Registrant.create({
             name: c.name,
             email: c.email
         }));

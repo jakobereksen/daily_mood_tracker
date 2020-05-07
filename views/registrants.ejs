@@ -2,8 +2,9 @@
 <link rel="stylesheet" type="text/css"   href="/css/bootstrap.css">
 
 <div>
-<% subscribers.forEach(s => { %>
+<% registrants.forEach(s => { %>
     <p><%= s.name %></p>
     <p><%= s.email %></p>
+    <p><%= s.password %></p>
 <% }); %>
 </div>
