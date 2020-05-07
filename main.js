@@ -1,17 +1,17 @@
 // Mongoose 
 const mongoose = require("mongoose");
 mongoose.connect(
-  "mongodb://localhost:27017/dmt_db",
+  "mongodb://localhost:27017/dmt_user_registration",
   {useNewUrlParser: true }
 );
 
 // Load Schema
-const Subscriber = require("./models/subscriber");
+const Registration = require("./models/registration");
 
 // Controller 
 const homeController = require("./controllers/homeController");
 const errorController = require("./controllers/errorController");
-const subscribersController = require("./controllers/subscribersController");
+const registrationController = require("./controllers/registrationController");
 
 // Body Parser necessery for Subscription Form
 var bodyParser = require('body-parser');
@@ -38,9 +38,9 @@ app.get("/", homeController.respondWithIndex);
 app.get("/statistics", homeController.showStatistics);
 app.get("/questionnaire", homeController.showQuestionnaire);
 
-app.get("/subscribers", subscribersController.getAllSubscribers);
-app.get("/contact", subscribersController.getSubscriptionPage);
-app.post("/subscribe", subscribersController.saveSubscriber);
+app.get("/registrants", registrationController.getAllRegistrants);
+app.get("/registration", registrationController.getRegisterPage);
+app.post("/register", registrationController.saveRegistrant);
 
 app.get("/:myName", homeController.respondWithName);
 
