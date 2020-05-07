@@ -1,0 +1,9 @@
+<link rel="stylesheet" type="text/css"   href="/css/dailymoodtracker.css">
+<link rel="stylesheet" type="text/css"   href="/css/bootstrap.css">
+
+<div>
+<% subscribers.forEach(s => { %>
+    <p><%= s.name %></p>
+    <p><%= s.email %></p>
+<% }); %>
+</div>
