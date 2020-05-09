@@ -52,11 +52,6 @@ app.get("/:myName", homeController.respondWithName);
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
-// Port Listening @ 3000
-app.listen(app.get("port"), () => {
-  console.log(`Server running at http://localhost:${app.get("port")}`);
-});
-
 app.use(
   express.urlencoded({
     extended: false,
