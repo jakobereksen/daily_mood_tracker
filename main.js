@@ -1,13 +1,11 @@
 // Mongoose
 const mongoose = require("mongoose");
+const morgan = require("morgan");
 
 //connect to database defined in MONGODB_URI
 mongoose.connect(
-  process.env.MONGODB_URI ||   "mongodb://local-host:27017/dmt_user_registration",
-  {useNewUrlParser: true})
-
-// Load Schema
-const Registration = require("./models/registration");
+	process.env.MONGODB_URI || "mongodb://local-host:27017/dmt_user_registration",
+	{useNewUrlParser: true});
 
 // Controller
 const homeController = require("./controllers/homeController");
@@ -15,12 +13,12 @@ const errorController = require("./controllers/errorController");
 const registrationController = require("./controllers/registrationController");
 
 // Body Parser necessery for Subscription Form
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 
 // Express Integration
 const layouts = require("express-ejs-layouts");
 const express = require("express"),
-  app = express();
+	app = express();
 
 app.use(express.static("public"));
 app.use(bodyParser.json());
@@ -33,9 +31,9 @@ app.use(layouts);
 app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 3000);
 constserver = app.listen(app.get("port"), () => {
-  console.log(`Server running at http://localhost:
+	console.log(`Server running at http://localhost:
     ${app.get("port")}`);
-  });
+});
 
 // Routing
 app.get("/", homeController.respondWithIndex);
@@ -53,10 +51,11 @@ app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
 app.use(
-  express.urlencoded({
-    extended: false,
-  })
+	express.urlencoded({
+		extended: false,
+	})
 );
 
 // Express.js
 app.use(express.json());
+app.use(morgan(":method :url :status * :response-timems"));
