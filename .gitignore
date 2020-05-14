@@ -1,1 +1,9 @@
 /node_modules
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/daily_mood_tracker.iml
+.idea/codeStyles/Project.xml
+.idea/codeStyles/codeStyleConfig.xml
