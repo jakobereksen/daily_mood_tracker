@@ -1,10 +1,11 @@
-const Registrant = require("../models/registration"),
-getRegistrantsParams = body => {
-  return{
-    name: body.name,
-    email: body.email,
-    password: body.password
-  };
+const Registrant = require("../models/registration");
+
+exports.getRegistrantsParams = function (body) {
+    return{
+        name: body.name,
+        email: body.email,
+        password: body.password
+    };
 };
 
 exports.getAllRegistrants = (req, res) => {

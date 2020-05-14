@@ -2,10 +2,25 @@
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 
+mongoose.Promise = global.Promise;
+
 //connect to database defined in MONGODB_URI
-mongoose.connect(
-	process.env.MONGODB_URI || "mongodb://local-host:27017/dmt_user_registration",
-	{useNewUrlParser: true});
+if (process.env.NODE_ENV === "test")
+	mongoose.connect(
+		"mongodb://localhost:27017/test_db",
+		{ useNewUrlParser: true, useFindAndModify: false }
+	);
+else
+	mongoose.connect(
+		process.env.MONGODB_URI || "mongodb://localhost:27017/dmt_user_registration",
+		{ useNewUrlParser: true, useFindAndModify: false }
+	);
+
+const db = mongoose.connection;
+
+db.once("open", () => {
+	console.log("Successfully connected to MongoDB using Mongoose!");
+});
 
 // Controller
 const homeController = require("./controllers/homeController");
@@ -59,3 +74,5 @@ app.use(
 // Express.js
 app.use(express.json());
 app.use(morgan(":method :url :status * :response-timems"));
+
+module.exports = app;
