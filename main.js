@@ -15,7 +15,9 @@ const express = require('express');
 // Controller
 const homeController = require('./controllers/homeController');
 const errorController = require('./controllers/errorController');
-const registrationController = require('./controllers/registrationController');
+const registrationController = require('./controllers/registrationControllerOld');
+const userController = require('./controllers/userController');
+const logController = require('./controllers/logController');
 
 const app = express();
 
@@ -75,6 +77,16 @@ app.get('/questionnaire', homeController.showQuestionnaire);
 app.get('/registrants', registrationController.getAllRegistrants);
 app.get('/registration', registrationController.getRegisterPage);
 app.post('/register', registrationController.saveRegistrant);
+
+// json response api
+app.get('/users', userController.getAllUsers);
+
+app.get('/user/:id', userController.getUser);
+app.delete('/user/:id', userController.deleteUser);
+app.post('/user/:id', userController.editUser);
+
+app.put('/user/:id/logs', logController.saveLogForUserId);
+app.get('/user/:id/logs', logController.getAllLogsFromUser);
 
 app.get('/:myName', homeController.respondWithName);
 

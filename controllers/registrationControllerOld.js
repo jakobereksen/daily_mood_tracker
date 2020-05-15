@@ -6,7 +6,26 @@ exports.getRegistrantsParams = (body) => ({
 	password: body.password,
 });
 
-// TODO: here registration logic
+exports.getAllRegistrants = (req, res) => {
+	Registrant.find({})
+		.exec()
+		.then((registrants) => {
+			res.render('registrants', {
+				registrants,
+			});
+		})
+		.catch((error) => {
+			console.log(error.message);
+			return [];
+		})
+		.then(() => {
+			console.log('promise complete');
+		});
+};
+
+exports.getRegisterPage = (req, res) => {
+	res.render('registration');
+};
 
 exports.saveRegistrant = (req, res) => {
 	const newRegistrant = new Registrant({
@@ -18,7 +37,7 @@ exports.saveRegistrant = (req, res) => {
 	newRegistrant
 		.save()
 		.then(() => {
-			res.json({ message: 'success' });
+			res.render('thanks');
 		})
 		.catch((error) => {
 			res.send(error);

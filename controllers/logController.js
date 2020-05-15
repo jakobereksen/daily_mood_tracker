@@ -2,8 +2,11 @@ const user = require('../models/user');
 const log = require('../models/log');
 
 exports.getAllLogsFromUser = (req, res) => {
+	const { id } = req.params;
+
 	user
-		.find({ email: req.body.email })
+		.findById(id)
+		.exec()
 		.then((users) => {
 			const foundUser = users[0];
 			const { logs } = foundUser.toObject();
@@ -15,8 +18,9 @@ exports.getAllLogsFromUser = (req, res) => {
 		});
 };
 
-exports.saveLogForUser = (req, res) => {
-	const { email, factorOfWellbeing, annotation } = req.body;
+exports.saveLogForUserId = (req, res) => {
+	const { factorOfWellbeing, annotation } = req.body;
+	const { id } = req.params;
 
 	const newLog = new log({
 		referenceDate: Date.now(),
@@ -24,9 +28,12 @@ exports.saveLogForUser = (req, res) => {
 		annotation,
 	});
 
-	user.find({ email }).then((users) => {
-		const foundUser = users[0];
-		foundUser.logs.push(newLog);
-		foundUser.save();
-	});
+	user
+		.findById(id)
+		.exec()
+		.then((users) => {
+			const foundUser = users[0];
+			foundUser.logs.push(newLog);
+			foundUser.save();
+		});
 };
