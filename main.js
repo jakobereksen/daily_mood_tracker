@@ -1,11 +1,8 @@
 // Mongoose
-const mongoose = require("mongoose");
-const morgan = require("morgan");
 
-//connect to database defined in MONGODB_URI
-mongoose.connect(
-	process.env.MONGODB_URI || "mongodb://local-host:27017/dmt_user_registration",
-	{useNewUrlParser: true});
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+const morgan = require("morgan");
 
 // Controller
 const homeController = require("./controllers/homeController");
@@ -17,8 +14,27 @@ var bodyParser = require("body-parser");
 
 // Express Integration
 const layouts = require("express-ejs-layouts");
-const express = require("express"),
-	app = express();
+const express = require("express");
+const app = express();
+
+//connect to database defined in MONGODB_URI
+if (process.env.NODE_ENV === "test")
+  mongoose.connect("mongodb://localhost:27017/test_db", {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+  });
+else
+  mongoose.connect(
+    process.env.MONGODB_URI ||
+      "mongodb://localhost:27017/dmt_user_registration",
+    { useNewUrlParser: true, useFindAndModify: false }
+  );
+
+const db = mongoose.connection;
+
+db.once("open", () => {
+  console.log("Successfully connected to MongoDB using Mongoose!");
+});
 
 app.use(express.static("public"));
 app.use(bodyParser.json());
@@ -27,11 +43,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(layouts);
 
+app.use(errorController.pageNotFoundError);
+app.use(errorController.internalServerError);
+
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+
+// Express.js
+app.use(express.json());
+app.use(morgan(":method :url :status * :response-timems"));
+
 // Views
 app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 3000);
-constserver = app.listen(app.get("port"), () => {
-	console.log(`Server running at http://localhost:
+
+app.listen(app.get("port"), () => {
+  console.log(`Server running at http://localhost:
     ${app.get("port")}`);
 });
 
@@ -47,15 +77,4 @@ app.post("/register", registrationController.saveRegistrant);
 
 app.get("/:myName", homeController.respondWithName);
 
-app.use(errorController.pageNotFoundError);
-app.use(errorController.internalServerError);
-
-app.use(
-	express.urlencoded({
-		extended: false,
-	})
-);
-
-// Express.js
-app.use(express.json());
-app.use(morgan(":method :url :status * :response-timems"));
+module.exports = app;
