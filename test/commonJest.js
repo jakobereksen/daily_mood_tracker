@@ -1,25 +1,26 @@
-process.env.NODE_ENV = "test";
-const request = require("supertest");
-const mongoose = require("mongoose");
-const app = require("../main");
+process.env.NODE_ENV = 'test';
+const request = require('supertest');
+const mongoose = require('mongoose');
+const app = require('../main');
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGO_URL, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 
 afterAll(async () => {
 	await db.close();
 });
 
-beforeEach(function (done) {
-
-	//jest.useFakeTimers();
+beforeEach((done) => {
 	// console.log('global beforeEach')
 	Promise.resolve()
 		.then(() => {
 			// console.log('all courses deleted')
 			done();
 		})
-		.catch(error => {
+		.catch((error) => {
 			// console.log('error caught: ' + error.message)
 			done(error.message);
 		});
@@ -27,5 +28,5 @@ beforeEach(function (done) {
 
 module.exports = {
 	app,
-	request
+	request,
 };

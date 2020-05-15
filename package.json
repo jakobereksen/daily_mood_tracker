@@ -1,36 +1,42 @@
 {
-  "name": "daily_mood_tracker_express",
-  "jest": {
-    "preset": "@shelf/jest-mongodb"
-  },
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "test": "jest",
-    "start": "node main.js"
-  },
-  "author": "Lioba",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "ejs": "^3.1.2",
-    "express": "^4.17.1",
-    "express-ejs-layouts": "^2.5.0",
-    "http-status-codes": "^1.4.0",
-    "i": "^0.3.6",
-    "mongodb": "^3.5.7",
-    "mongoose": "^5.9.11",
-    "morgan": "^1.10.0"
-  },
-  "devDependencies": {
-    "@shelf/jest-mongodb": "^1.1.5",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "eslint": "^7.0.0",
-    "jest": "^26.0.1",
-    "superagent": "^5.2.2",
-    "supertest": "^4.0.2"
-  },
-  "testEnvironment": "node"
+	"name": "daily_mood_tracker_express",
+	"jest": {
+		"preset": "@shelf/jest-mongodb"
+	},
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"test": "jest",
+		"start": "node main.js"
+	},
+	"author": "Lioba",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"ejs": "^3.1.2",
+		"express": "^4.17.1",
+		"express-ejs-layouts": "^2.5.0",
+		"http-status-codes": "^1.4.0",
+		"i": "^0.3.6",
+		"mongodb": "^3.5.7",
+		"mongoose": "^5.9.11",
+		"morgan": "^1.10.0"
+	},
+	"devDependencies": {
+		"@shelf/jest-mongodb": "^1.1.5",
+		"babel-cli": "^6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"eslint": "^6.8.0",
+		"eslint-config-airbnb": "^18.1.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-jsx-a11y": "^6.2.3",
+		"eslint-plugin-react": "^7.20.0",
+		"eslint-plugin-react-hooks": "^2.5.0",
+		"jest": "^26.0.1",
+		"superagent": "^5.2.2",
+		"supertest": "^4.0.2"
+	},
+	"testEnvironment": "node"
 }

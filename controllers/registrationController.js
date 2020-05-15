@@ -1,19 +1,17 @@
-const Registrant = require("../models/registration");
+const Registrant = require('../models/registration');
 
-exports.getRegistrantsParams = function (body) {
-	return {
-		name: body.name,
-		email: body.email,
-		password: body.password
-	};
-};
+exports.getRegistrantsParams = (body) => ({
+	name: body.name,
+	email: body.email,
+	password: body.password,
+});
 
 exports.getAllRegistrants = (req, res) => {
 	Registrant.find({})
 		.exec()
 		.then((registrants) => {
-			res.render("registrants", {
-				registrants: registrants
+			res.render('registrants', {
+				registrants,
 			});
 		})
 		.catch((error) => {
@@ -21,26 +19,27 @@ exports.getAllRegistrants = (req, res) => {
 			return [];
 		})
 		.then(() => {
-			console.log("promise complete");
+			console.log('promise complete');
 		});
 };
 
 exports.getRegisterPage = (req, res) => {
-	res.render("registration");
+	res.render('registration');
 };
 
 exports.saveRegistrant = (req, res) => {
-	let newRegistrant = new Registrant({
+	const newRegistrant = new Registrant({
 		name: req.body.name,
 		email: req.body.email,
-		password: req.body.password
+		password: req.body.password,
 	});
 
-	newRegistrant.save()
+	newRegistrant
+		.save()
 		.then(() => {
-			res.render("thanks");
+			res.render('thanks');
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.send(error);
 		});
 };
