@@ -1,13 +1,8 @@
 process.env.NODE_ENV = "test";
-const Course = require("../models/course");
 const request = require("supertest");
-module.exports = {
-	app: require("../app"),
-	Course: Course,
-	request: request
-};
-
 const mongoose = require("mongoose");
+const app = require("../main");
+
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 
@@ -16,8 +11,10 @@ afterAll(async () => {
 });
 
 beforeEach(function (done) {
+
+	//jest.useFakeTimers();
 	// console.log('global beforeEach')
-	Course.deleteMany({})
+	Promise.resolve()
 		.then(() => {
 			// console.log('all courses deleted')
 			done();
@@ -27,3 +24,8 @@ beforeEach(function (done) {
 			done(error.message);
 		});
 });
+
+module.exports = {
+	app,
+	request
+};
