@@ -1,4 +1,4 @@
-const Registrant = require('../models/registration');
+const Registrant = require('../models/user');
 
 exports.getRegistrantsParams = (body) => ({
 	name: body.name,
