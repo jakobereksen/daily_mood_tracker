@@ -46,19 +46,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(layouts);
 
-app.use(errorController.pageNotFoundError);
-app.use(errorController.internalServerError);
-
-app.use(
-	express.urlencoded({
-		extended: false,
-	})
-);
-
-// Express.js
-app.use(express.json());
-app.use(morgan(':method :url :status * :response-timems'));
-
 // Views
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 3000);
@@ -89,5 +76,18 @@ app.put('/user/:id/logs', logController.saveLogForUserId);
 app.get('/user/:id/logs', logController.getAllLogsFromUser);
 
 app.get('/:myName', homeController.respondWithName);
+
+app.use(errorController.pageNotFoundError);
+app.use(errorController.internalServerError);
+
+app.use(
+	express.urlencoded({
+		extended: false,
+	})
+);
+
+// Express.js
+app.use(express.json());
+app.use(morgan(':method :url :status * :response-timems'));
 
 module.exports = app;
