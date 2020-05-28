@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const logSchema = mongoose.Schema({
 	referenceDate: { type: Date, required: true },
 	factorOfWellbeing: { type: Number /* number from one to ten */, required: true },
-	annotation: { type: Date },
+	annotation: { type: String },
 });
 
 logSchema.methods.getInfo = function () {
