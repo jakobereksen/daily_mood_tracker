@@ -7,9 +7,8 @@ exports.getAllLogsFromUser = (req, res) => {
 	user
 		.findById(id)
 		.exec()
-		.then((users) => {
-			const foundUser = users[0];
-			const { logs } = foundUser.toObject();
+		.then((user) => {
+			const { logs } = user.toObject();
 			res.json({ logs });
 		})
 		.catch((error) => {
@@ -31,9 +30,8 @@ exports.saveLogForUserId = (req, res) => {
 	user
 		.findById(id)
 		.exec()
-		.then((users) => {
-			const foundUser = users[0];
-			foundUser.logs.push(newLog);
-			foundUser.save();
+		.then((user) => {
+			user.logs.push(newLog);
+			user.save();
 		});
 };
