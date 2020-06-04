@@ -13,15 +13,22 @@
 	"author": "Lioba",
 	"license": "ISC",
 	"dependencies": {
+		"bcrypt": "^4.0.1",
 		"body-parser": "^1.19.0",
+		"connect-flash": "^0.1.1",
+		"cookie-parser": "^1.4.5",
 		"ejs": "^3.1.2",
 		"express": "^4.17.1",
 		"express-ejs-layouts": "^2.5.0",
+		"express-session": "^1.17.1",
+		"express-validator": "^6.5.0",
 		"http-status-codes": "^1.4.0",
 		"i": "^0.3.6",
 		"mongodb": "^3.5.7",
 		"mongoose": "^5.9.11",
-		"morgan": "^1.10.0"
+		"morgan": "^1.10.0",
+		"passport": "^0.4.1",
+		"passport-local-mongoose": "^6.0.1"
 	},
 	"devDependencies": {
 		"@shelf/jest-mongodb": "^1.1.5",

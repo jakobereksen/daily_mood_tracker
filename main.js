@@ -1,5 +1,4 @@
 // Mongoose
-
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
@@ -11,11 +10,50 @@ const bodyParser = require('body-parser');
 // Express Integration
 const layouts = require('express-ejs-layouts');
 const express = require('express');
+const expressValidator = require('express-validator');
+
+// Adding Passport AND Flash Messaging
+const router = express.Router();
+const passport = require('passport');
+const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
+
+const User = require('./models/user');
+
+router.use(cookieParser('dailymoodtracker'));
+router.use(expressSession({
+	secret: 'dailymoodtracker',
+	cookie: {
+		maxAge: 4000000
+	},
+	resave: false,
+	saveUninitialized: false
+}));
+
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+router.use(flash());
+router.use(expressValidator());
+
+
+router.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  res.locals.loggedIn = req.isAuthenticated();
+  res.locals.currentUser = req.user;
+  next();
+});
+
+
 
 // Controller
 const homeController = require('./controllers/homeController');
 const errorController = require('./controllers/errorController');
-const registrationController = require('./controllers/registrationControllerOld');
+const registrationController = require('./controllers/registrationController');
 const userController = require('./controllers/userController');
 const logController = require('./controllers/logController');
 
@@ -23,22 +61,22 @@ const app = express();
 
 // connect to database defined in MONGODB_URI
 if (process.env.NODE_ENV === 'test')
-	mongoose.connect('mongodb://localhost:27017/test_db', {
-		useNewUrlParser: true,
-		useFindAndModify: false,
-	});
+mongoose.connect('mongodb://localhost:27017/test_db', {
+	useNewUrlParser: true,
+	useFindAndModify: false,
+});
 else
-	mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dmt_user_registration', {
-		useNewUrlParser: true,
-		useFindAndModify: false,
-	});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dmt_user_registration', {
+	useNewUrlParser: true,
+	useFindAndModify: false,
+});
 
 const db = mongoose.connection;
 
 db.once('open', () => {
 	console.log('Successfully connected to MongoDB using Mongoose!');
 });
-
+app.use(layouts);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -52,42 +90,59 @@ app.set('port', process.env.PORT || 3000);
 
 app.listen(app.get('port'), () => {
 	console.log(`Server running at http://localhost:
-    ${app.get('port')}`);
-});
+		${app.get('port')}`);
+	});
 
-// Routing
-app.get('/', homeController.respondWithIndex);
+	// Routing
+	app.use("/", router)
+	router.get('/', homeController.respondWithIndex);
 
-app.get('/statistics', homeController.showStatistics);
-app.get('/questionnaire', homeController.showQuestionnaire);
+	router.get('/users/statistics', homeController.showStatistics);
+	router.get('/users/questionnaire', homeController.showQuestionnaire);
 
-app.get('/registrants', registrationController.getAllRegistrants);
-app.get('/registration', registrationController.getRegisterPage);
-app.post('/register', registrationController.saveRegistrant);
+	router.get('/users/login', registrationController.login)
+	router.post('/users/login', registrationController.authenticate)
 
-// json response api
-app.get('/users', userController.getAllUsers);
+	router.get('/users/logout', registrationController.logout, registrationController.redirectView)
+	router.get('/users', registrationController.indexView)
 
-app.get('/user/:id', userController.getUser);
-app.delete('/user/:id', userController.deleteUser);
-app.post('/user/:id', userController.editUser);
+	router.get('/users/new', registrationController.new)
+	router.post('/users', registrationController.validate, registrationController.create, registrationController.redirectView)
 
-app.put('/user/:id/logs', logController.saveLogForUserId);
-app.get('/user/:id/logs', logController.getAllLogsFromUser);
+	router.get('/users/:id/edit', registrationController.edit)
+	router.put('/users/:id', registrationController.update, registrationController.redirectView)
 
-app.get('/:myName', homeController.respondWithName);
+	router.get('/users/:id', registrationController.showView)
+	router.delete('/users/:id', registrationController.delete, registrationController.redirectView)
 
-app.use(errorController.pageNotFoundError);
-app.use(errorController.internalServerError);
+	router.get('/', homeController.respondWithIndex)
 
-app.use(
-	express.urlencoded({
-		extended: false,
-	})
-);
 
-// Express.js
-app.use(express.json());
-app.use(morgan(':method :url :status * :response-timems'));
+	// json response api
+	// Login
 
-module.exports = app;
+	router.get('/users', userController.getAllUsers);
+
+	router.get('/user/:id', userController.getUser);
+	router.delete('/user/:id', userController.deleteUser);
+	router.post('/user/:id', userController.editUser);
+
+	router.put('/user/:id/logs', logController.saveLogForUserId);
+	router.get('/user/:id/logs', logController.getAllLogsFromUser);
+
+	router.get('/:myName', homeController.respondWithName);
+
+	app.use(errorController.pageNotFoundError);
+	app.use(errorController.internalServerError);
+
+	app.use(
+		express.urlencoded({
+			extended: false,
+		})
+	);
+
+	// Express.js
+	app.use(express.json());
+	app.use(morgan(':method :url :status * :response-timems'));
+
+	module.exports = app;
