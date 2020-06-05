@@ -1,6 +1,5 @@
-const User = require('../models/user');
 const passport = require('passport');
-const { body, check } = require('express-validator');
+const User = require('../models/user');
 
 const getUserParams = (body) => {
 	return {
@@ -15,17 +14,17 @@ const getUserParams = (body) => {
 
 module.exports = {
 	index: (req, res, next) => {
-    User.find()
-      .sort({ 'name.last': 'asc' })
-      .then(users => {
-        res.locals.users = users
-        next()
-      })
-      .catch(error => {
-        console.log(`Error fetching users: ${error.message}`)
-        next(error)
-      })
-  },
+		User.find()
+			.sort({ 'name.last': 'asc' })
+			.then((users) => {
+				res.locals.users = users;
+				next();
+			})
+			.catch((error) => {
+				console.log(`Error fetching users: ${error.message}`);
+				next(error);
+			});
+	},
 	indexView: (req, res) => {
 		User.find({})
 			.exec()
@@ -52,20 +51,23 @@ module.exports = {
 	},
 
 	show: (req, res, next) => {
-		let userId = req.params.id;
+		const userId = req.params.id;
 		User.findById(userId)
-			.then(user => {
+			.then((user) => {
 				res.locals.user = user;
+
 				next();
 			})
-			.catch(error => {
+			.catch((error) => {
 				console.log(`Error fetching user by ID: ${error.message}`);
 				next(error);
 			});
 	},
 
 	showView: (req, res) => {
-		res.render('users/show');
+		const { user } = res.locals;
+
+		res.render('users/show', { user });
 	},
 
 	// showView: (req, res) => {
@@ -84,7 +86,7 @@ module.exports = {
 		User.findById(userId)
 			.then((user) => {
 				res.render('users/edit', {
-					user: user,
+					user,
 				});
 			})
 			.catch((error) => {

@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 // Express Integration
 const layouts = require('express-ejs-layouts');
 const express = require('express');
+const methodOverride = require('method-override');
 const expressValidator = require('express-validator');
 
 // Adding Passport AND Flash Messaging
@@ -75,6 +76,8 @@ const db = mongoose.connection;
 db.once('open', () => {
 	console.log('Successfully connected to MongoDB using Mongoose!');
 });
+
+app.use(methodOverride('_method'));
 app.use(layouts);
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -102,15 +105,20 @@ router.get('/questionnaire', homeController.showQuestionnaire);
 router.get('/users/login', registrationController.login);
 router.post('/users/login', registrationController.authenticate);
 
-router.get('/users/logout', registrationController.logout,registrationController.redirectView );
-router.get('/users', registrationController.index,registrationController.indexView);
+router.get('/users/logout', registrationController.logout, registrationController.redirectView);
+router.get('/users', registrationController.index, registrationController.indexView);
 
 router.get('/users/new', registrationController.new);
-router.post('/users',registrationController.validate,registrationController.create,registrationController.redirectView);
+router.post(
+	'/users',
+	registrationController.validate,
+	registrationController.create,
+	registrationController.redirectView
+);
 
 router.get('/users/:id', registrationController.show, registrationController.showView);
 router.get('/users/:id/edit', registrationController.edit);
-router.put('/users/:id',registrationController.update, registrationController.redirectView);
+router.put('/users/:id', registrationController.update, registrationController.redirectView);
 router.delete('/users/:id', registrationController.delete, registrationController.redirectView);
 
 router.get('/', homeController.respondWithIndex);

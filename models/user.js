@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const passportLocalMongoose = require("passport-local-mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = mongoose.Schema(
 	{
@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 			lowercase: true,
-			unique: true
+			unique: true,
 		},
 		logs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'log' }],
 	},
@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
 
 // For password hashing and storage
 userSchema.plugin(passportLocalMongoose, {
-usernameField: "email"
+	usernameField: 'email',
 });
 
 userSchema.virtual('fullName').get(function () {
@@ -36,6 +36,5 @@ userSchema.virtual('fullName').get(function () {
 userSchema.methods.getInfo = function () {
 	return `name: ${this.name}, email: ${this.email}`;
 };
-
 
 module.exports = mongoose.model('user', userSchema);
