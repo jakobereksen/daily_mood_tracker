@@ -1,0 +1,19 @@
+<h2 class="title">Dein täglicher Fragebogen</h2>
+
+<form
+	class="contact-form container-questionnaire"
+	method="POST"
+	action="<%= editing ? `/logs/${log._id}?_method=PUT` : `/user/${user._id}/logs/new`%>"
+>
+	<h3 class="question">Wie fühlst du dich heute?</h3>
+
+	<label for="factorOfWellbeing">factorOfWellbeing</label>
+	<input class="radio-input" type="number" id="verypositive" name="factorOfWellbeing" value="5" />
+
+	<label for="annotation">Hier ist Platz für deine persönlichen Notizen:</label>
+	<input class="q2" type="text" name="annotation" />
+
+	<button class="btn btn-lg btn-primary btn-block" type="submit" id="submitButton">
+		<%= editing ?"Save" :"Bestätigen" %>
+	</button>
+</form>

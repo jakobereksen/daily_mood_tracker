@@ -8,21 +8,27 @@
   </head>
   <body>
 
-    <header>
+    <body>
       <h1 class="logo">Daily Mood Tracker</h1>
 
-      <nav>
-          <div class="nav-elements">
-            <a class="nav-element" href="questionnaire">Neuer Eintrag</a>
-            <a class="nav-element" href="statistics">Mein Stimmungsverlauf</a>
-            <a class="nav-element">Einstellungen</a>
-            <a class="nav-element">Abmelden</a>
-          </div>
-      </nav>
+      <%- include('partials/navigation.ejs'); %>
 
-    </header>
+      <div>
+        <% if (flashMessages) { %>
+          <% if (flashMessages.success) { %>
+            <div> <%= flashMessages.success %> </div>
+          <% } else if (flashMessages.error) { %>
+            <div> <%= flashMessages.error %> </div>
+          <% } %>
+        <% } %>
+      </div>
 
-    <%- body %>
+      <%-body%>
+
+      </body>
+
+
+
     <div class="footer">FOOTER</div>
   </body>
 </html>

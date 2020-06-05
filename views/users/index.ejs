@@ -1,0 +1,44 @@
+<h2 class="center">Nutzer Übersicht</h2>
+<div class="center">
+  <a class="button" href="/users/new">Create User</a>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th>Email</th>
+      <th>Logs</th>
+      <th>Bearbeiten</th>
+      <th>Löschen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+    <tr>
+      <td>
+        <a href="<%=`/users/${user._id}`%>">
+          <%= user.fullName %>
+        </a>
+      </td>
+      <td>
+        <%= user.email %>
+      </td>
+      <td>
+        <a href="<%=`/user/${user._id}/logs`%>">
+          Logs
+        </a>
+      </td>
+      <td>
+        <a href="<%=`/users/${user._id}/edit`%>">
+          Bearbeiten
+        </a>
+      </td>
+      <td>
+        <a href="<%=`/users/${user._id}?_method=DELETE` %>" onclick="return confirm('Bist Du dir sicher, dass Du Deinen Account löschen willst?')" a>
+          Löschen</a>
+      </td>
+    </tr>
+    <% }); %>
+  </tbody>
+</table>
