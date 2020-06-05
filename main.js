@@ -77,7 +77,7 @@ db.once('open', () => {
 	console.log('Successfully connected to MongoDB using Mongoose!');
 });
 
-app.use(methodOverride('_method'));
+app.use(methodOverride('_method',{methods: ['POST', 'GET']}));
 app.use(layouts);
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -121,6 +121,16 @@ router.get('/users/:id/edit', registrationController.edit);
 router.put('/users/:id', registrationController.update, registrationController.redirectView);
 router.delete('/users/:id', registrationController.delete, registrationController.redirectView);
 
+router.get('/user/:id/logs/new', logController.new, logController.create);
+router.get('/logs/:id/edit', logController.edit);
+
+router.get('/user/:id/logs',logController.index);
+
+router.put('/logs/:id', logController.update, logController.redirectView);
+router.delete('/logs/:id', logController.delete, logController.redirectView);
+
+router.put('/user/:id/logs', logController.create, logController.redirectView);
+
 router.get('/', homeController.respondWithIndex);
 
 // json response api
@@ -128,14 +138,14 @@ router.get('/', homeController.respondWithIndex);
 
 // router.get('/users', userController.getAllUsers);
 
-router.get('/user/:id', userController.getUser);
-router.delete('/user/:id', userController.deleteUser);
-router.post('/user/:id', userController.editUser);
-
-router.put('/user/:id/logs', logController.saveLogForUserId);
-router.get('/user/:id/logs', logController.getAllLogsFromUser);
-
-router.get('/:myName', homeController.respondWithName);
+// router.get('/user/:id', userController.getUser);
+// router.delete('/user/:id', userController.deleteUser);
+// router.post('/user/:id', userController.editUser);
+//
+// router.put('/user/:id/logs', logController.saveLogForUserId);
+// router.get('/user/:id/logs', logController.getAllLogsFromUser);
+//
+// router.get('/:myName', homeController.respondWithName);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);

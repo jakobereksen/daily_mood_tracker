@@ -6,7 +6,9 @@
   <thead>
     <tr>
       <th>Name</th>
+
       <th>Email</th>
+      <th>Logs</th>
       <th>Bearbeiten</th>
       <th>Löschen</th>
     </tr>
@@ -21,6 +23,11 @@
       </td>
       <td>
         <%= user.email %>
+      </td>
+      <td>
+        <a href="<%=`/user/${user._id}/logs`%>">
+          Logs
+        </a>
       </td>
       <td>
         <a href="<%=`/users/${user._id}/edit`%>">
