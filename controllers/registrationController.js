@@ -4,13 +4,28 @@ const { body, check } = require('express-validator');
 
 const getUserParams = (body) => {
 	return {
-		name: body.name,
+		name: {
+			first: body.first,
+			last: body.last,
+		},
 		email: body.email,
 		password: body.password,
 	};
 };
 
 module.exports = {
+	index: (req, res, next) => {
+    User.find()
+      .sort({ 'name.last': 'asc' })
+      .then(users => {
+        res.locals.users = users
+        next()
+      })
+      .catch(error => {
+        console.log(`Error fetching users: ${error.message}`)
+        next(error)
+      })
+  },
 	indexView: (req, res) => {
 		User.find({})
 			.exec()
@@ -36,9 +51,32 @@ module.exports = {
 		next();
 	},
 
+	show: (req, res, next) => {
+		let userId = req.params.id;
+		User.findById(userId)
+			.then(user => {
+				res.locals.user = user;
+				next();
+			})
+			.catch(error => {
+				console.log(`Error fetching user by ID: ${error.message}`);
+				next(error);
+			});
+	},
+
 	showView: (req, res) => {
 		res.render('users/show');
 	},
+
+	// showView: (req, res) => {
+	// 	const userId = req.params.id;
+	// 	User.findById(userId)
+	// 		.exec()
+	// 		.then((user) => {
+	// 			res.render('users/show', { user });
+	// 		});
+
+	// },
 
 	edit: (req, res, next) => {
 		const userId = req.params.id;

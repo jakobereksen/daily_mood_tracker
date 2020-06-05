@@ -96,27 +96,21 @@ app.listen(app.get('port'), () => {
 app.use('/', router);
 router.get('/', homeController.respondWithIndex);
 
-router.get('/users/statistics', homeController.showStatistics);
-router.get('/users/questionnaire', homeController.showQuestionnaire);
+router.get('/statistics', homeController.showStatistics);
+router.get('/questionnaire', homeController.showQuestionnaire);
 
 router.get('/users/login', registrationController.login);
 router.post('/users/login', registrationController.authenticate);
 
-router.get('/users/logout', registrationController.logout, registrationController.redirectView);
-router.get('/users', registrationController.indexView);
+router.get('/users/logout', registrationController.logout,registrationController.redirectView );
+router.get('/users', registrationController.index,registrationController.indexView);
 
 router.get('/users/new', registrationController.new);
-router.post(
-	'/users',
-	registrationController.validate,
-	registrationController.create,
-	registrationController.redirectView
-);
+router.post('/users',registrationController.validate,registrationController.create,registrationController.redirectView);
 
+router.get('/users/:id', registrationController.show, registrationController.showView);
 router.get('/users/:id/edit', registrationController.edit);
-router.put('/users/:id', registrationController.update, registrationController.redirectView);
-
-router.get('/users/:id', registrationController.showView);
+router.put('/users/:id',registrationController.update, registrationController.redirectView);
 router.delete('/users/:id', registrationController.delete, registrationController.redirectView);
 
 router.get('/', homeController.respondWithIndex);
