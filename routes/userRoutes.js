@@ -1,20 +1,20 @@
 const router = require('express').Router();
-const usersController = require('../controllers/userController');
+const registrationController = require('../controllers/registrationController');
 
-router.get('/', usersController.index, usersController.indexView);
-router.get('/new', usersController.new);
+router.get('/', registrationController.index, registrationController.indexView);
+router.get('/new', registrationController.new);
 router.post(
 	'/create',
-	usersController.validate,
-	usersController.create,
-	usersController.redirectView
+	registrationController.validate,
+	registrationController.create,
+	registrationController.redirectView
 );
-router.get('/login', usersController.login);
-router.post('/login', usersController.authenticate);
-router.get('/logout', usersController.logout, usersController.redirectView);
-router.get('/:id/edit', usersController.edit);
-router.put('/:id/update', usersController.update, usersController.redirectView);
-router.get('/:id', usersController.show, usersController.showView);
-router.delete('/:id/delete', usersController.delete, usersController.redirectView);
+router.get('/login', registrationController.login);
+router.post('/login', registrationController.authenticate);
+router.get('/logout', registrationController.logout, registrationController.redirectView);
+router.get('/:id/edit', registrationController.edit);
+router.put('/:id/update', registrationController.update, registrationController.redirectView);
+router.get('/:id', registrationController.show, registrationController.showView);
+router.delete('/:id/delete', registrationController.delete, registrationController.redirectView);
 
 module.exports = router;

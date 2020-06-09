@@ -54,7 +54,7 @@ router.use((req, res, next) => {
 });
 
 // Controller
-const errorController = require('./controllers/errorController');
+// const errorController = require('./controllers/errorController');
 // const homeController = require('./controllers/homeController');
 // const registrationController = require('./controllers/registrationController');
 // const userController = require('./controllers/userController');
@@ -113,9 +113,6 @@ app.use('/', router);
 // router.get('/user/:id/logs', logController.getAllLogsFromUser);
 //
 // router.get('/:myName', homeController.respondWithName);
-
-app.use(errorController.pageNotFoundError);
-app.use(errorController.internalServerError);
 
 app.use(
 	express.urlencoded({
