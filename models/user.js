@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
-const  {logSchema}  = require('./log')
+const randToken = require('rand-token');
+const  {logSchema}  = require('./log');
 
 const userSchema = mongoose.Schema(
 	{
@@ -20,6 +21,9 @@ const userSchema = mongoose.Schema(
 			lowercase: true,
 			unique: true,
 		},
+		apiToken: {
+		  type: String
+		},
 		logs:[logSchema],
 	},
 	{ timestamps: true }
@@ -38,4 +42,8 @@ userSchema.methods.getInfo = function () {
 	return `name: ${this.name}, email: ${this.email}`;
 };
 
+userSchema.pre('save', function(next) {
+	if(!this.apiToken) this.apiToken = randToken.generate(16);
+	next();
+});
 module.exports = mongoose.model('user', userSchema);

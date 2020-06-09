@@ -9,6 +9,7 @@
 
       <th>Email</th>
       <th>Logs</th>
+      <th>API Token</th>
       <th>Bearbeiten</th>
       <th>Löschen</th>
     </tr>
@@ -28,6 +29,9 @@
         <a href="<%=`/user/${user._id}/logs`%>">
           Logs
         </a>
+      </td>
+      <td>
+        <%= user.apiToken %>
       </td>
       <td>
         <a href="<%=`/users/${user._id}/edit`%>">

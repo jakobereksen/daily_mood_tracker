@@ -10,7 +10,6 @@ const User = require('../models/user');
 const router = express.Router();
 
 const userRoutes = require('./userRoutes');
-const subscriberRoutes = require('./subscriberRoutes');
 const logRoutes = require('./logRoutes');
 const errorRoutes = require('./errorRoutes');
 const homeRoutes = require('./homeRoutes');

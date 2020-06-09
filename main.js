@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 const morgan = require('morgan');
-
+// const ejsLint = require('ejs-lint');
 // Body Parser necessery for Subscription Form
 const bodyParser = require('body-parser');
 
@@ -13,45 +13,12 @@ const express = require('express');
 
 const app = express();
 const methodOverride = require('method-override');
-const expressValidator = require('express-validator');
 
 // Adding Passport AND Flash Messaging
 // const router = express.Router();
-const passport = require('passport');
-const flash = require('connect-flash');
-const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
+
 const router = require('./routes/index');
 
-const User = require('./models/user');
-
-router.use(cookieParser('dailymoodtracker'));
-router.use(
-	expressSession({
-		secret: 'dailymoodtracker',
-		cookie: {
-			maxAge: 4000000,
-		},
-		resave: false,
-		saveUninitialized: false,
-	})
-);
-
-router.use(passport.initialize());
-router.use(passport.session());
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-router.use(flash());
-router.use(expressValidator());
-
-router.use((req, res, next) => {
-	res.locals.flashMessages = req.flash();
-	res.locals.loggedIn = req.isAuthenticated();
-	res.locals.currentUser = req.user;
-	next();
-});
 
 // Controller
 // const errorController = require('./controllers/errorController');

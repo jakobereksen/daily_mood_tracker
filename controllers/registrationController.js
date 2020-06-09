@@ -1,4 +1,5 @@
 const passport = require('passport');
+const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
 
 const getUserParams = (body) => {
@@ -106,7 +107,7 @@ module.exports = {
 				next();
 			})
 			.catch((error) => {
-				console.log('could not save user: ' + error.message);
+				console.log(`could not save user: ${  error.message}`);
 				req.flash('error', `Error updating user by ID: ${error.message}`);
 				res.locals.redirect = `/users/${userId}/edit`;
 				next();
@@ -128,13 +129,13 @@ module.exports = {
 
 	create: (req, res, next) => {
 		if (req.skip) next();
-		let newUser = new User(getUserParams(req.body));
+		const newUser = new User(getUserParams(req.body));
 		User.register(newUser, req.body.password, (error, user) => {
 			if (user) {
 				req.flash('success', `${user.fullName}'s account created successfully!`);
 				res.locals.redirect = '/users';
 				next();
-				req.flash('danger', `failed to create user account because: ${e.message}`);
+				req.flash('danger', `failed to create user account because: ${error.message}`);
 				res.locals.redirect = '/users/new';
 				next();
 			}
@@ -142,7 +143,7 @@ module.exports = {
 	},
 
 	redirectView: (req, res, next) => {
-		let redirectPath = res.locals.redirect;
+		const redirectPath = res.locals.redirect;
 		if (redirectPath) res.redirect(redirectPath);
 		else next();
 	},
@@ -158,7 +159,7 @@ module.exports = {
 		req.check('password', 'Password cannot be empty').notEmpty();
 		req.getValidationResult().then((error) => {
 			if (!error.isEmpty()) {
-				let messages = error.array().map((e) => e.msg);
+				const messages = error.array().map((e) => e.msg);
 				req.skip = true;
 				req.flash('error', messages.join(' and '));
 				res.locals.redirect = '/users/new';
@@ -168,11 +169,31 @@ module.exports = {
 			}
 		});
 	},
-
-	authenticate: passport.authenticate('local', {
-		failureRedirect: '/users/login',
-		failureFlash: 'Failed to login.',
-		successRedirect: '/',
-		successFlash: 'Logged in!',
-	}),
+	apiAuthenticate: (req, res, next) => {
+		passport.authenticate('local', (errors, user) => {
+			if (user) {
+				const signedToken = jsonWebToken.sign(
+					{
+						data: user._id,
+						exp: new Date().setDate(new Date().getDate() + 1)
+					},
+					'secret_encoding_passphrase'
+				);
+				res.json({
+					success: true,
+					token: signedToken
+				});
+			} else
+				res.json({
+					success: false,
+					message: 'Could not authenticate user.'
+				});
+		})(req, res, next);
+	},
+	// authenticate: passport.authenticate('local', {
+	// 	failureRedirect: '/users/login',
+	// 	failureFlash: 'Failed to login.',
+	// 	successRedirect: '/',
+	// 	successFlash: 'Logged in!',
+	// }),
 };

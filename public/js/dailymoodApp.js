@@ -1,8 +1,10 @@
 $(document).ready(() => {
 	$('#modal-button').click(() => {
 		$('.modal-body').html('');
-		$.get('/logs?format=json', data => {
-			data.forEach(log => {
+		$.get('/api/logs', (results = {}) => {
+			const {data} = results;
+			if(!data || !data.logs) return;
+			data.logs.forEach(log => {
 				$('.modal-body').append(
 					`<div>
 						<span class="course-title">
