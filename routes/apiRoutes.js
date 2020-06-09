@@ -4,7 +4,9 @@ const usersController = require('../controllers/userController');
 
 // TODO
 // router.get('/logs/:id/star', logsController.star, logsController.respondJSON);
+
 router.post('/login', usersController.apiAuthenticate);
+router.use(usersController.verifyJWT);
 
 router.get(
 	'/logs',
