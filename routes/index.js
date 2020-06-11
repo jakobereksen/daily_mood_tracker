@@ -13,6 +13,7 @@ const userRoutes = require('./userRoutes');
 const logRoutes = require('./logRoutes');
 const errorRoutes = require('./errorRoutes');
 const homeRoutes = require('./homeRoutes');
+const apiRoutes = require('./apiRoutes');
 
 router.use(cookieParser('dailymoodtracker'));
 router.use(
@@ -42,6 +43,7 @@ router.use((req, res, next) => {
 	next();
 });
 
+router.use('/api', apiRoutes);
 router.use('/users', userRoutes);
 // router.use('/subscribers', subscriberRoutes);
 router.use('/logs', logRoutes);

@@ -5,18 +5,16 @@
     <title>Daily Mood Tracker</title>
     <link rel="stylesheet" type="text/css"   href="/css/dailymoodtracker.css">
     <link rel="stylesheet" type="text/css"   href="/css/bootstrap.css">
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/dailymoodApp.js"></script>
   </head>
   <body>
 
     <body>
       <h1 class="logo">Daily Mood Tracker</h1>
-
       <%- include('partials/navigation.ejs'); %>
       <%- include('logs/_logsModal.ejs'); %>
-
       <div>
         <% if (flashMessages) { %>
           <% if (flashMessages.success) { %>
@@ -30,8 +28,6 @@
       <%-body%>
 
       </body>
-
-
 
     <div class="footer">FOOTER</div>
   </body>

@@ -8,7 +8,7 @@ exports.logErrors = (error, req, res, next) => {
 exports.pageNotFoundError = (req, res) => {
 	const errorCode = httpStatus.NOT_FOUND;
 	res.status(errorCode);
-	res.render('The page does not exist!');
+	res.send(`${errorCode} | This page does not exist!`);
 };
 
 exports.internalServerError = (error, req, res, next) => {

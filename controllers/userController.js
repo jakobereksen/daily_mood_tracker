@@ -220,11 +220,11 @@ module.exports = {
 				message: 'Provide Token'
 			});
 		}
-	}
-	// authenticate: passport.authenticate('local', {
-	// 	failureRedirect: '/users/login',
-	// 	failureFlash: 'Failed to login.',
-	// 	successRedirect: '/',
-	// 	successFlash: 'Logged in!',
-	// }),
+	},
+	authenticate: passport.authenticate('local', {
+		failureRedirect: '/users/login',
+		failureFlash: 'Failed to login.',
+		successRedirect: '/',
+		successFlash: 'Logged in!',
+	}),
 };
