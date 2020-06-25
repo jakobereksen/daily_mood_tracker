@@ -43,6 +43,15 @@ module.exports = {
 			});
 	},
 
+	getLogs: (req, res) => {
+		const { id } = req.params;
+
+		User
+			.findById(id)
+			.exec()
+			.then((foundLogs) => res.json({ user: foundLogs.toObject() }));
+	},
+
 	edit: (req, res, next) => {
 		const logId = req.params.id;
 		LogEntry.findById(logId)
