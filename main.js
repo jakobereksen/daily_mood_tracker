@@ -88,7 +88,7 @@ app.use(layouts);
 
 // Views
 app.set('view engine', 'ejs');
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 
 app.listen(app.get('port'), () => {
 	console.log(`Server running at http://localhost:
@@ -106,7 +106,7 @@ router.get('/users/login', registrationController.login);
 router.post('/users/login', registrationController.authenticate);
 
 router.get('/users/logout', registrationController.logout, registrationController.redirectView);
-router.get('/users', registrationController.index, registrationController.indexView);
+// router.get('/users', registrationController.index, registrationController.indexView);
 
 router.get('/users/new', registrationController.new);
 router.post(
@@ -136,7 +136,7 @@ router.get('/', homeController.respondWithIndex);
 // json response api
 // Login
 
-// router.get('/users', userController.getAllUsers);
+router.get('/users', userController.getAllUsers);
 
 // router.get('/user/:id', userController.getUser);
 // router.delete('/user/:id', userController.deleteUser);
