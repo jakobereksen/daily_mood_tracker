@@ -5,6 +5,7 @@ import { Login } from './pages/login';
 import { Register } from './pages/register';
 import { Overview } from './pages/overview';
 import { LogEntry } from './pages/logEntry';
+import { setupNotifications } from './notifications';
 
 // /api/:token/...
 
@@ -44,6 +45,7 @@ const App = () => {
 
 	const fetchData = () => {
 		fetchLogs();
+		setupNotifications();
 	};
 
 	const fetchLogs = () => {
