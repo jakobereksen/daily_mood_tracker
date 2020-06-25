@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Login } from './pages/login';
 import { Register } from './pages/register';
 import { Overview } from './pages/overview';
+import { LogEntry } from './pages/logEntry';
 
 // /api/:token/...
-
-Modal.setAppElement('#app');
 
 const TEST_LOGS = [
 	{
@@ -36,10 +34,17 @@ const App = () => {
 	const [token, setToken] = useState('');
 	const [logs, setLogs] = useState([]);
 	const [loggedIn, setLoggedIn] = useState(false);
+	const [showSurvey, setShowSurvey] = useState(false);
 
 	useEffect(() => {
-		fetchLogs();
+		if (loggedIn) {
+			fetchData();
+		}
 	}, []);
+
+	const fetchData = () => {
+		fetchLogs();
+	};
 
 	const fetchLogs = () => {
 		const logs = TEST_LOGS;
@@ -58,9 +63,13 @@ const App = () => {
 			}).length === 0;
 
 		if (hasNoLogForToday) {
-			console.log('has no survey for today');
-			// TODO: display survey here
+			setShowSurvey(true);
 		}
+	};
+
+	const onLogEntry = ({ factorOfWellbeing, annotation }) => {
+		console.log({ factorOfWellbeing, annotation });
+		setShowSurvey(false);
 	};
 
 	const onLogin = ({ email, password }) => {
@@ -69,6 +78,7 @@ const App = () => {
 		const newToken = 'irgendeintoken';
 		setToken(newToken);
 		setLoggedIn(true);
+		fetchData();
 	};
 
 	const onRegister = ({ email, password, firstName, lastName, confirmPassword }) => {
@@ -77,34 +87,58 @@ const App = () => {
 		const newToken = 'irgendeintoken';
 		setToken(newToken);
 		setLoggedIn(true);
+		fetchData();
 	};
 
 	return (
-		<div id="app">
-			<Router>
-				<Switch>
-					{loggedIn ? (
-						<React.Fragment>
-							<Route path="/">
-								<Overview logs={logs} />
-							</Route>
-						</React.Fragment>
-					) : (
-						<React.Fragment>
-							<Route path="/login">
-								<Login onLogin={onLogin} />
-							</Route>
-							<Route path="/register">
-								<Register onRegister={onRegister} />
-							</Route>
-						</React.Fragment>
-					)}
-				</Switch>
-				<Modal isOpen>
-					<h1>test</h1>
-				</Modal>
-			</Router>
-		</div>
+		<Router>
+			<Switch>
+				{loggedIn ? (
+					<React.Fragment>
+						<Route path="/">
+							<Overview logs={logs} />
+						</Route>
+					</React.Fragment>
+				) : (
+					<React.Fragment>
+						<Route path="/login">
+							<Login onLogin={onLogin} />
+						</Route>
+						<Route path="/register">
+							<Register onRegister={onRegister} />
+						</Route>
+					</React.Fragment>
+				)}
+			</Switch>
+
+			{showSurvey ? (
+				<div
+					style={{
+						position: 'fixed',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						backgroundColor: 'rgba(0,0,0,0.2)',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<div
+						style={{
+							padding: 20,
+							maxWidth: 500,
+							width: '100%',
+							backgroundColor: 'white',
+							borderRadius: 6,
+						}}
+					>
+						<LogEntry onLogEntry={onLogEntry} />
+					</div>
+				</div>
+			) : undefined}
+		</Router>
 	);
 };
 
