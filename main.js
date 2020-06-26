@@ -97,55 +97,17 @@ app.listen(app.get('port'), () => {
 
 // Routing
 app.use('/', router);
-router.get('/', homeController.respondWithIndex);
 
-router.get('/statistics', homeController.showStatistics);
-router.get('/questionnaire', homeController.showQuestionnaire);
-
-router.get('/users/login', registrationController.login);
-router.post('/users/login', registrationController.authenticate);
-
-router.get('/users/logout', registrationController.logout, registrationController.redirectView);
-// router.get('/users', registrationController.index, registrationController.indexView);
-
-router.get('/users/new', registrationController.new);
-router.post(
-	'/users',
-	registrationController.validate,
-	registrationController.create,
-	registrationController.redirectView
-);
-
-router.get('/users/:id', registrationController.show, registrationController.showView);
-router.get('/users/:id/edit', registrationController.edit);
-router.put('/users/:id', registrationController.update, registrationController.redirectView);
-router.delete('/users/:id', registrationController.delete, registrationController.redirectView);
-
-router.get('/user/:id/logs/new', logController.new, logController.create);
-router.get('/logs/:id/edit', logController.edit);
-
-router.get('/user/:id/logs',logController.index);
-
-router.put('/logs/:id', logController.update, logController.redirectView);
-router.delete('/logs/:id', logController.delete, logController.redirectView);
-
-router.put('/user/:id/logs', logController.create, logController.redirectView);
-
-router.get('/', homeController.respondWithIndex);
 
 // json response api
 // Login
 
-router.get('/users', userController.getAllUsers);
+router.get('/user/:id', userController.getUser);
+router.delete('/user/:id', userController.deleteUser);
+router.post('/user/:id', userController.editUser);
 
-// router.get('/user/:id', userController.getUser);
-// router.delete('/user/:id', userController.deleteUser);
-// router.post('/user/:id', userController.editUser);
-//
-// router.put('/user/:id/logs', logController.saveLogForUserId);
-// router.get('/user/:id/logs', logController.getAllLogsFromUser);
-//
-// router.get('/:myName', homeController.respondWithName);
+router.put('/user/:id/logs', logController.saveLogForUserId);
+router.get('/user/:id/logs', logController.getAllLogsFromUser);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
