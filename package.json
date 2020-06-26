@@ -30,7 +30,8 @@
 		"mongoose": "^5.9.11",
 		"morgan": "^1.10.0",
 		"passport": "^0.4.1",
-		"passport-local-mongoose": "^6.0.1"
+		"passport-local-mongoose": "^6.0.1",
+		"web-push": "^3.4.4"
 	},
 	"devDependencies": {
 		"@shelf/jest-mongodb": "^1.1.5",

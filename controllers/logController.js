@@ -89,3 +89,12 @@ module.exports = {
 	// 		});
 	// },
 };
+
+exports.index = (req, res, next) => {
+	const userId = req.params.id;
+	User.findById(userId)
+		.exec()
+		.then((user) => {
+			res.render('logs/index', { user });
+		});
+};
