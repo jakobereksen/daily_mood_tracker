@@ -31,31 +31,53 @@ const TEST_LOGS = [
 ];
 
 const App = () => {
-	const [users, setUsers] = useState([]);
 	const [token, setToken] = useState('');
+	const [user, setUser] = useState(null);
 	const [logs, setLogs] = useState([]);
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [showSurvey, setShowSurvey] = useState(false);
 
 	useEffect(() => {
-		if (loggedIn) {
-			fetchData();
+		if (loggedIn && user) {
+			fetchLogsForId(user._id).then((newLogs) => {
+				setLogs(newLogs);
+				setupNotifications();
+			});
 		}
 	}, []);
 
-	const fetchData = () => {
-		fetchLogs();
-		setupNotifications();
+	useEffect(() => {
+		if (loggedIn && user) {
+			fetchLogsForId(user._id).then((newLogs) => {
+				setLogs(newLogs);
+				setupNotifications();
+			});
+		}
+	}, [loggedIn]);
+
+	useEffect(() => {
+		console.log('logs changed');
+		if (loggedIn && getShouldShowSurvey(logs)) {
+			setShowSurvey(true);
+		} else {
+			setShowSurvey(false);
+		}
+	}, [logs]);
+
+	const fetchLogsForId = async (id) => {
+		const logsResponse = await fetch(`/user/${id}/logs`);
+		const logsParsed = await logsResponse.json();
+
+		return logsParsed.data.logs;
 	};
 
-	const fetchLogs = () => {
-		const logs = TEST_LOGS;
-		setLogs(logs);
-
+	const getShouldShowSurvey = (logs) => {
 		const hasNoLogForToday =
 			logs.filter((log) => {
-				const first = log.referenceDate;
+				console.log(log);
+				const first = new Date(log.referenceDate);
 				const second = new Date();
+				console.log({ first, second });
 
 				return (
 					first.getFullYear() === second.getFullYear() &&
@@ -65,31 +87,51 @@ const App = () => {
 			}).length === 0;
 
 		if (hasNoLogForToday) {
-			setShowSurvey(true);
+			return true;
+		} else {
+			return false;
 		}
 	};
 
-	const onLogEntry = ({ factorOfWellbeing, annotation }) => {
-		console.log({ factorOfWellbeing, annotation });
-		setShowSurvey(false);
+	const onLogEntry = async ({ factorOfWellbeing, annotation }) => {
+		await fetch(`/user/${user._id}/logs`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ data: { factorOfWellbeing, annotation } }),
+		});
+		const newLogs = await fetchLogsForId(user._id);
+		setLogs(newLogs);
 	};
 
-	const onLogin = ({ email, password }) => {
-		console.log({ email, password });
-
+	const onLogin = async ({ email, password }) => {
 		const newToken = 'irgendeintoken';
 		setToken(newToken);
 		setLoggedIn(true);
-		fetchData();
 	};
 
-	const onRegister = ({ email, password, firstName, lastName, confirmPassword }) => {
-		console.log({ email, password, firstName, lastName, confirmPassword });
+	const onRegister = async ({ email, password, firstName, lastName, confirmPassword }) => {
+		const res = await fetch(`/register`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				name: {
+					first: firstName,
+					last: lastName,
+				},
+				email,
+				password,
+			}),
+		});
 
-		const newToken = 'irgendeintoken';
-		setToken(newToken);
+		const resParsed = await res.json();
+
+		setToken(resParsed.data.JWT);
+		setUser(resParsed.data.user);
 		setLoggedIn(true);
-		fetchData();
 	};
 
 	return (

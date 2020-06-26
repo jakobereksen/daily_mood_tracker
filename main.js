@@ -77,7 +77,7 @@ db.once('open', () => {
 	console.log('Successfully connected to MongoDB using Mongoose!');
 });
 
-app.use(methodOverride('_method',{methods: ['POST', 'GET']}));
+app.use(methodOverride('_method', { methods: ['POST', 'GET'] }));
 app.use(layouts);
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -98,9 +98,10 @@ app.listen(app.get('port'), () => {
 // Routing
 app.use('/', router);
 
-
 // json response api
 // Login
+
+router.post('/register', registrationController.validate, registrationController.create);
 
 router.get('/user/:id', userController.getUser);
 router.delete('/user/:id', userController.deleteUser);

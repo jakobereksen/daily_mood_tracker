@@ -3,15 +3,13 @@ const User = require('../models/user');
 const { LogEntry } = require('../models/log');
 
 const getLogEntryParams = (body) => {
-	console.log(body);
 	return {
-		factorOfWellbeing: body.factorOfWellbeing,
-		annotation: body.annotation,
+		factorOfWellbeing: body.data.factorOfWellbeing,
+		annotation: body.data.annotation,
 	};
 };
 
 module.exports = {
-
 	saveLogForUserId: (req, res) => {
 		const userId = req.params.id;
 		const { factorOfWellbeing, annotation } = getLogEntryParams(req.body);
@@ -22,7 +20,7 @@ module.exports = {
 				return user.save();
 			})
 			.then(() => {
-				res.json({status: httpStatus.CREATED});
+				res.json({ status: httpStatus.CREATED });
 			});
 	},
 
@@ -31,7 +29,7 @@ module.exports = {
 		User.findById(userId)
 			.exec()
 			.then((user) => {
-				res.json({status: httpStatus.OK, data: {logs: user.logs}});
+				res.json({ status: httpStatus.OK, data: { logs: user.logs } });
 			});
 	},
 
@@ -90,5 +88,4 @@ module.exports = {
 	// 			next();
 	// 		});
 	// },
-
 };

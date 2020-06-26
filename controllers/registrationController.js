@@ -1,4 +1,5 @@
 const passport = require('passport');
+const httpStatus = require('http-status-codes');
 const User = require('../models/user');
 
 const getUserParams = (body) => {
@@ -13,63 +14,6 @@ const getUserParams = (body) => {
 };
 
 module.exports = {
-	index: (req, res, next) => {
-		User.find()
-			.sort({ 'name.last': 'asc' })
-			.then((users) => {
-				res.locals.users = users;
-				next();
-			})
-			.catch((error) => {
-				console.log(`Error fetching users: ${error.message}`);
-				next(error);
-			});
-	},
-	indexView: (req, res) => {
-		User.find({})
-			.exec()
-			.then((users) => {
-				res.render('users/index', { users });
-			});
-	},
-
-	new: (req, res) => {
-		res.locals.user = new User();
-		req.flash('success', 'You have been signed up!');
-		res.render('users/new');
-	},
-
-	login: (req, res) => {
-		res.render('users/login');
-	},
-
-	logout: (req, res, next) => {
-		req.logout();
-		req.flash('success', 'You have been logged out!');
-		res.locals.redirect = '/';
-		next();
-	},
-
-	show: (req, res, next) => {
-		const userId = req.params.id;
-		User.findById(userId)
-			.then((user) => {
-				res.locals.user = user;
-
-				next();
-			})
-			.catch((error) => {
-				console.log(`Error fetching user by ID: ${error.message}`);
-				next(error);
-			});
-	},
-
-	showView: (req, res) => {
-		const { user } = res.locals;
-
-		res.render('users/show', { user });
-	},
-
 	// showView: (req, res) => {
 	// 	const userId = req.params.id;
 	// 	User.findById(userId)
@@ -80,7 +24,7 @@ module.exports = {
 
 	// },
 
-	edit: (req, res, next) => {
+	/* 	edit: (req, res, next) => {
 		const userId = req.params.id;
 		res.locals.userParams = {};
 		User.findById(userId)
@@ -93,9 +37,9 @@ module.exports = {
 				console.log(`Error fetching user by ID: ${error.message}`);
 				next(error);
 			});
-	},
+	}, */
 
-	update: (req, res, next) => {
+	/* 	update: (req, res, next) => {
 		const userId = req.params.id;
 		const userParams = getUserParams(req.body);
 
@@ -111,9 +55,9 @@ module.exports = {
 				res.locals.redirect = `/users/${userId}/edit`;
 				next();
 			});
-	},
+	}, */
 
-	delete: (req, res, next) => {
+	/* 	delete: (req, res, next) => {
 		const userId = req.params.id;
 		User.findByIdAndRemove(userId)
 			.then(() => {
@@ -124,27 +68,22 @@ module.exports = {
 				console.log(`Error deleting user by ID: ${error.message}`);
 				next();
 			});
-	},
+	}, */
 
 	create: (req, res, next) => {
 		if (req.skip) next();
-		let newUser = new User(getUserParams(req.body));
+		const newUser = new User(getUserParams(req.body));
 		User.register(newUser, req.body.password, (error, user) => {
 			if (user) {
-				req.flash('success', `${user.fullName}'s account created successfully!`);
-				res.locals.redirect = '/users';
-				next();
-				req.flash('danger', `failed to create user account because: ${e.message}`);
-				res.locals.redirect = '/users/new';
-				next();
+				res.json({
+					status: httpStatus.CREATED,
+					data: {
+						user,
+						JWT: 'SOME_TOKEN',
+					},
+				});
 			}
 		});
-	},
-
-	redirectView: (req, res, next) => {
-		let redirectPath = res.locals.redirect;
-		if (redirectPath) res.redirect(redirectPath);
-		else next();
 	},
 
 	validate: (req, res, next) => {
@@ -158,10 +97,8 @@ module.exports = {
 		req.check('password', 'Password cannot be empty').notEmpty();
 		req.getValidationResult().then((error) => {
 			if (!error.isEmpty()) {
-				let messages = error.array().map((e) => e.msg);
+				const messages = error.array().map((e) => e.msg);
 				req.skip = true;
-				req.flash('error', messages.join(' and '));
-				res.locals.redirect = '/users/new';
 				next();
 			} else {
 				next();
