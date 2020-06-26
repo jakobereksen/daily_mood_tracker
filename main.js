@@ -116,6 +116,28 @@ router.post(
 	registrationController.redirectView
 );
 
+
+
+app.post('/subscribe', (req, res) => {
+	const {subscription} = req.body;
+	const {userId} = req.body;
+	console.dir(subscription);
+	//TODO: Store subscription keys and userId in DB
+	webpush.setVapidDetails(
+		process.env.DOMAIN,
+		process.env.PUBLIC_VAPID_KEY,
+		process.env.PRIVATE_VAPID_KEY
+	);
+	res.sendStatus(200);
+	const payload = JSON.stringify({
+		title: model.lang.pushTitle,
+		body: model.lang.pushBody
+	});
+	webpush.sendNotification(subscription, payload);
+});
+
+
+
 router.get('/users/:id', registrationController.show, registrationController.showView);
 router.get('/users/:id/edit', registrationController.edit);
 router.put('/users/:id', registrationController.update, registrationController.redirectView);
