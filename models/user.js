@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const { logSchema } = require('./log');
+const { subscriptionShema } = require('./subscription');
 
 const userSchema = mongoose.Schema(
 	{
@@ -22,6 +23,7 @@ const userSchema = mongoose.Schema(
 		},
 		password: { type: String },
 		logs: [logSchema],
+		subsrcriptions: [subscriptionShema],
 	},
 	{ timestamps: true }
 );

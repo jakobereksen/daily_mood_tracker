@@ -1,6 +1,8 @@
 // Mongoose
 const mongoose = require('mongoose');
 
+const webpush = require('web-push');
+
 mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 
@@ -21,6 +23,9 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 
 const User = require('./models/user');
+
+process.env.PUBLIC_VAPID_KEY = 'BFzlWHM4-WrQkczhEYt09VhlQuGFQoImKwVywRq6mOLhnug6zMGlIvPPTjiMCIzBX88KOPgb1ymVO5vusTllyRc';
+process.env.PRIVATE_VAPID_KEY = 'Y7RHNRPkDwu4Bow4j0ZNYfhF595C72BKqNN5wC5To-s';
 
 router.use(cookieParser('dailymoodtracker'));
 router.use(
@@ -103,15 +108,16 @@ app.post('/subscribe', (req, res) => {
 	console.dir(subscription);
 	//TODO: Store subscription keys and userId in DB
 	webpush.setVapidDetails(
-		process.env.DOMAIN,
+		'mailto:lele.gebharle@web.de',
 		process.env.PUBLIC_VAPID_KEY,
 		process.env.PRIVATE_VAPID_KEY
 	);
 	res.sendStatus(200);
 	const payload = JSON.stringify({
-		title: model.lang.pushTitle,
-		body: model.lang.pushBody
+		title: 'hi',
+		body: '123'
 	});
+	console.log(subscription);
 	webpush.sendNotification(subscription, payload);
 });
 
