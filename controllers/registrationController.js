@@ -1,5 +1,5 @@
-const passport = require('passport');
 const httpStatus = require('http-status-codes');
+const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
 
 const getUserParams = (body) => {
@@ -11,6 +11,19 @@ const getUserParams = (body) => {
 		email: body.email,
 		password: body.password,
 	};
+};
+
+const JWT_ENCODING_PASSPHRASE = 'SOME_RAND0M_STRING_LALALA';
+
+const generateTokenForId = (id) => {
+	const signedToken = jsonWebToken.sign(
+		{
+			data: id,
+			exp: new Date().setDate(new Date().getDate() + 1),
+		},
+		JWT_ENCODING_PASSPHRASE
+	);
+	return signedToken;
 };
 
 module.exports = {
@@ -75,11 +88,12 @@ module.exports = {
 		const newUser = new User(getUserParams(req.body));
 		User.register(newUser, req.body.password, (error, user) => {
 			if (user) {
+				const signedToken = generateTokenForId(user._id);
 				res.json({
 					status: httpStatus.CREATED,
 					data: {
 						user,
-						JWT: 'SOME_TOKEN',
+						JWT: signedToken,
 					},
 				});
 			}
@@ -106,10 +120,63 @@ module.exports = {
 		});
 	},
 
-	authenticate: passport.authenticate('local', {
-		failureRedirect: '/users/login',
-		failureFlash: 'Failed to login.',
-		successRedirect: '/',
-		successFlash: 'Logged in!',
-	}),
+	login: (req, res, next) => {
+		const { email, password } = req.body.data;
+
+		User.findOne({ email })
+			.exec()
+			.then((user) => {
+				console.log(user);
+				if (user.password === password) {
+					const signedToken = generateTokenForId(user._id);
+					res.json({
+						status: httpStatus.OK,
+						data: {
+							user,
+							JWT: signedToken,
+						},
+					});
+				} else {
+					res.json({
+						status: httpStatus.UNAUTHORIZED,
+					});
+				}
+			});
+	},
+
+	/* 	apiAuthenticate: (req, res, next) => {
+		passport.authenticate('local', (errors, user) => {
+			if (user) {
+				const signedToken = jsonWebToken.sign(
+					{
+						data: user._id,
+						exp: new Date().setDate(new Date().getDate() + 1),
+					},
+					JWT_ENCODING_PASSPHRASE
+				);
+				res.json({
+					success: true,
+					token: signedToken,
+				});
+			} else
+				res.json({
+					success: false,
+					message: 'Could not authenticate user.',
+				});
+		})(req, res, next);
+	}, */
+
+	verifyJWT: (req, res, next) => {
+		const { token } = req.headers;
+
+		try {
+			const decoded = jsonWebToken.verify(token, JWT_ENCODING_PASSPHRASE);
+			next();
+		} catch (err) {
+			res.status(httpStatus.FORBIDDEN).json({
+				error: true,
+				message: 'No User account found.',
+			});
+		}
+	},
 };

@@ -51,7 +51,6 @@ router.use((req, res, next) => {
 });
 
 // Controller
-const homeController = require('./controllers/homeController');
 const errorController = require('./controllers/errorController');
 const registrationController = require('./controllers/registrationController');
 const userController = require('./controllers/userController');
@@ -102,13 +101,14 @@ app.use('/', router);
 // Login
 
 router.post('/register', registrationController.validate, registrationController.create);
+router.post('/login', registrationController.login);
 
-router.get('/user/:id', userController.getUser);
+/* router.get('/user/:id', userController.getUser);
 router.delete('/user/:id', userController.deleteUser);
-router.post('/user/:id', userController.editUser);
+router.post('/user/:id', userController.editUser); */
 
-router.put('/user/:id/logs', logController.saveLogForUserId);
-router.get('/user/:id/logs', logController.getAllLogsFromUser);
+router.put('/user/:id/logs', registrationController.verifyJWT, logController.saveLogForUserId);
+router.get('/user/:id/logs', registrationController.verifyJWT, logController.getAllLogsFromUser);
 
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);

@@ -9,7 +9,7 @@ import { setupNotifications } from './notifications';
 
 // /api/:token/...
 
-const TEST_LOGS = [
+/* const TEST_LOGS = [
 	{
 		_id: 123,
 		referenceDate: new Date(new Date().setDate(new Date().getDate() - 1)),
@@ -28,7 +28,7 @@ const TEST_LOGS = [
 		factorOfWellbeing: 2,
 		annotation: 'mir gings gut',
 	},
-];
+]; */
 
 const App = () => {
 	const [token, setToken] = useState('');
@@ -36,6 +36,10 @@ const App = () => {
 	const [logs, setLogs] = useState([]);
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [showSurvey, setShowSurvey] = useState(false);
+
+	useEffect(() => {
+		console.log({ loggedIn, token, user });
+	}, [loggedIn]);
 
 	useEffect(() => {
 		if (loggedIn && user) {
@@ -65,7 +69,12 @@ const App = () => {
 	}, [logs]);
 
 	const fetchLogsForId = async (id) => {
-		const logsResponse = await fetch(`/user/${id}/logs`);
+		const logsResponse = await fetch(`/user/${id}/logs`, {
+			headers: {
+				'Content-Type': 'application/json',
+				token,
+			},
+		});
 		const logsParsed = await logsResponse.json();
 
 		return logsParsed.data.logs;
@@ -98,6 +107,7 @@ const App = () => {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
+				token,
 			},
 			body: JSON.stringify({ data: { factorOfWellbeing, annotation } }),
 		});
@@ -106,8 +116,17 @@ const App = () => {
 	};
 
 	const onLogin = async ({ email, password }) => {
-		const newToken = 'irgendeintoken';
-		setToken(newToken);
+		const res = await fetch(`/login`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ data: { email, password } }),
+		});
+		const resParsed = await res.json();
+
+		setToken(resParsed.data.JWT);
+		setUser(resParsed.data.user);
 		setLoggedIn(true);
 	};
 
@@ -116,6 +135,7 @@ const App = () => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				token,
 			},
 			body: JSON.stringify({
 				name: {
@@ -139,7 +159,7 @@ const App = () => {
 			<Switch>
 				{loggedIn ? (
 					<React.Fragment>
-						<Route path="/">
+						<Route path="*">
 							<Overview logs={logs} />
 						</Route>
 					</React.Fragment>
