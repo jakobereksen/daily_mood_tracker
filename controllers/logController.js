@@ -1,6 +1,7 @@
 const httpStatus = require('http-status-codes');
 const User = require('../models/user');
 const { LogEntry } = require('../models/log');
+const { Subscription } = require('../models/subscription');
 
 const getLogEntryParams = (body) => {
 	return {
@@ -14,9 +15,11 @@ module.exports = {
 		const userId = req.params.id;
 		const { factorOfWellbeing, annotation } = getLogEntryParams(req.body);
 		const logEntry = new LogEntry({ referenceDate: new Date(), factorOfWellbeing, annotation });
+		// const subscription = new Subscription({date: new Date()});
 		User.findById(userId)
 			.then((user) => {
 				user.logs.push(logEntry);
+				// user.subscriptions.push(subscription);
 				return user.save();
 			})
 			.then(() => {

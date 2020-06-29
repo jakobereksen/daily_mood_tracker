@@ -61,6 +61,8 @@ const registrationController = require('./controllers/registrationController');
 const userController = require('./controllers/userController');
 const logController = require('./controllers/logController');
 
+// process.env.DOMAIN = userController.getEmail();
+
 const app = express();
 
 // connect to database defined in MONGODB_URI
@@ -109,15 +111,16 @@ app.post('/subscribe', (req, res) => {
 	//TODO: Store subscription keys and userId in DB
 	webpush.setVapidDetails(
 		'mailto:lele.gebharle@web.de',
+		// process.env.DOMAIN,
 		process.env.PUBLIC_VAPID_KEY,
 		process.env.PRIVATE_VAPID_KEY
 	);
 	res.sendStatus(200);
 	const payload = JSON.stringify({
-		title: 'hi',
-		body: '123'
+		// title: `Willkommen zurück ${userController.getName()}!`,
+		title: 'Willkommen zurück!',
+		body: 'Heute schon deinen Mood evaluiert?'
 	});
-	console.log(subscription);
 	webpush.sendNotification(subscription, payload);
 });
 

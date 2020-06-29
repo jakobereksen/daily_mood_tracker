@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const { logSchema } = require('./log');
-const { subscriptionShema } = require('./subscription');
+const { subscriptionSchema } = require('./subscription');
 
 const userSchema = mongoose.Schema(
 	{
@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema(
 		},
 		password: { type: String },
 		logs: [logSchema],
-		subsrcriptions: [subscriptionShema],
+		// subscriptions: [subscriptionSchema],
 	},
 	{ timestamps: true }
 );
@@ -40,5 +40,9 @@ userSchema.virtual('fullName').get(function () {
 userSchema.methods.getInfo = function () {
 	return `name: ${this.name}, email: ${this.email}`;
 };
+
+// userSchema.methods.getEmail = function () {
+// 	return this.email;
+// };
 
 module.exports = mongoose.model('user', userSchema);

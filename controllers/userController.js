@@ -21,6 +21,24 @@ exports.getUser = (req, res) => {
 		.then((foundUser) => res.json({ user: foundUser.toObject() }));
 };
 
+exports.getEmail = (req, res) => {
+	const { id } = req.params;
+
+	user
+		.findById(id)
+		.exec()
+		.then((foundUser) => res(foundUser.email));
+	// .then((foundUser) => res({ userProperty: foundUser.email}));
+};
+//
+// exports.getName = (req, res) => {
+// 	const { id } = req.params;
+//
+// 	user
+// 		.findById(id)
+// 		.then((foundUser) => res({ userProperty: foundUser.name}));
+// };
+
 exports.editUser = (req, res) => {
 	const { id } = req.params;
 	const updateProperties = req.body;
