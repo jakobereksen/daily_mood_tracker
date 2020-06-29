@@ -43,18 +43,19 @@ const App = () => {
 
 	useEffect(() => {
 		if (loggedIn && user) {
+			setupNotifications(user._id);
 			fetchLogsForId(user._id).then((newLogs) => {
 				setLogs(newLogs);
-				setupNotifications();
+
 			});
 		}
 	}, []);
 
 	useEffect(() => {
 		if (loggedIn && user) {
+			setupNotifications(user._id);
 			fetchLogsForId(user._id).then((newLogs) => {
 				setLogs(newLogs);
-				setupNotifications();
 			});
 		}
 	}, [loggedIn]);

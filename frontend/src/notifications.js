@@ -1,16 +1,19 @@
 //Start subscription
-const publicVapidKey = 'public key of server';
+const publicVapidKey = 'BFzlWHM4-WrQkczhEYt09VhlQuGFQoImKwVywRq6mOLhnug6zMGlIvPPTjiMCIzBX88KOPgb1ymVO5vusTllyRc';
 
-export const setupNotifications = () => {
+export const setupNotifications = (userId) => {
+	console.log('setup n');
 	if (window.Notification) {
 		if (Notification.permission != 'granted') {
 			Notification.requestPermission(() => {
 				if (Notification.permission === 'granted') {
-					getSubscriptionObject().then(subscribe);
+					getSubscriptionObject().then((subscription) => {subscribe(subscription, userId);});
 				}
 			}).catch(function (err) {
 				console.log(err);
 			});
+		} else {
+			getSubscriptionObject().then((subscription) => {subscribe(subscription, userId)});
 		}
 	}
 };
@@ -35,19 +38,19 @@ function getSubscriptionObject() {
 }
 
 //Send subscription to server
-function subscribe(subscription) {
-	/* return fetch(window.location.origin + '/subscribe', {
+function subscribe(subscription, userId) {
+	 return fetch(window.location.origin + '/subscribe', {
 		method: 'POST',
 		body: JSON.stringify({
 			subscription: subscription,
-			userId: mv.user_id != undefined ? mv.user_id : '',
+			userId,
 		}),
 		headers: {
 			'content-type': 'application/json',
 		},
 	}).catch(function (err) {
 		console.log(err);
-    }); */
+    });
 	console.log('subscribe');
 }
 

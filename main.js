@@ -1,6 +1,8 @@
 // Mongoose
 const mongoose = require('mongoose');
 
+const webpush = require('web-push');
+
 mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 
@@ -21,6 +23,9 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 
 const User = require('./models/user');
+
+process.env.PUBLIC_VAPID_KEY = 'BFzlWHM4-WrQkczhEYt09VhlQuGFQoImKwVywRq6mOLhnug6zMGlIvPPTjiMCIzBX88KOPgb1ymVO5vusTllyRc';
+process.env.PRIVATE_VAPID_KEY = 'Y7RHNRPkDwu4Bow4j0ZNYfhF595C72BKqNN5wC5To-s';
 
 router.use(cookieParser('dailymoodtracker'));
 router.use(
@@ -55,6 +60,8 @@ const errorController = require('./controllers/errorController');
 const registrationController = require('./controllers/registrationController');
 const userController = require('./controllers/userController');
 const logController = require('./controllers/logController');
+
+// process.env.DOMAIN = userController.getEmail();
 
 const app = express();
 
@@ -96,6 +103,26 @@ app.listen(app.get('port'), () => {
 
 // Routing
 app.use('/', router);
+
+app.post('/subscribe', (req, res) => {
+	const {subscription} = req.body;
+	const {userId} = req.body;
+	console.dir(subscription);
+	//TODO: Store subscription keys and userId in DB
+	webpush.setVapidDetails(
+		'mailto:lele.gebharle@web.de',
+		// process.env.DOMAIN,
+		process.env.PUBLIC_VAPID_KEY,
+		process.env.PRIVATE_VAPID_KEY
+	);
+	res.sendStatus(200);
+	const payload = JSON.stringify({
+		// title: `Willkommen zurück ${userController.getName()}!`,
+		title: 'Willkommen zurück!',
+		body: 'Heute schon deinen Mood evaluiert?'
+	});
+	webpush.sendNotification(subscription, payload);
+});
 
 // json response api
 // Login
